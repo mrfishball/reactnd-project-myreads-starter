@@ -108,6 +108,7 @@ class BooksApp extends Component {
         )}/>
         <Route path='/search' render={({ history }) => (
           <SearchBook
+            shelves={this.state}
             onUpdateShelf={(book, shelf) => {
                 this.updateShelf(book, shelf)
                 // history.push('/')
