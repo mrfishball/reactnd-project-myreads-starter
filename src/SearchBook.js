@@ -1,34 +1,35 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import PropTypes from 'prop-types'
-import escapeRegExp from 'escape-string-regexp'
-import sortBy from 'sort-by'
 import * as BooksAPI from './BooksAPI'
 import Book from './Book'
 
 class SearchBook extends Component {
   state = {
-    query: '',
+    query: "",
     books: []
   }
 
   updateQuery = (query) => {
     this.setState({ query: query.trim() })
+    this.searchBook(query)
   }
 
-  // clearQuery = () => {
-  //   this.setState({ query: '' })
-  // }
+  searchBook = (query) => {
+    if (!query) {
+      this.setState({ books: [] })
+    } else {
+      BooksAPI.search(query).then((books) => {
+        this.setState({ books })
+      })
+    }
+  }
 
-  // searchBook = (query) => {
-  //   BooksAPI.search(query).then((books) => {
-  //     this.setState({ books })
-  //   })
-  // }
+  handleShelfUpdate = (book, shelf) => {
+    if (this.props.onUpdateShelf)
+      this.props.onUpdateShelf(book, shelf)
+  }
 
   render() {
-    const { query, books } = this.state
-
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -45,14 +46,19 @@ class SearchBook extends Component {
             <input
               type="text"
               placeholder="Search by title or author"
-              value={query}
+              value={this.state.query}
               onChange={(event) => this.updateQuery(event.target.value)}
             />
           </div>
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            <div>{this.state.query}</div>
+            <Book
+              books={this.state.books}
+              onUpdateShelf={(book, shelf) => {
+                  this.handleShelfUpdate(book, shelf)
+                }}
+            />
           </ol>
         </div>
       </div>

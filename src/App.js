@@ -7,9 +7,10 @@ import './App.css'
 
 class BooksApp extends Component {
   state = {
+    books: [],
     currentlyReading: [],
     wantToRead: [],
-    read: [],
+    read: []
   }
 
   componentDidMount() {
@@ -25,14 +26,29 @@ class BooksApp extends Component {
   }
 
   updateShelf = (book, shelf) => {
-    if (book.shelf !== shelf) {
+    if (book.shelf && book.shelf !== shelf) {
       BooksAPI.update(book, shelf).then(() => {
+        BooksAPI.get(book.id).then((theBook) => {
+          this.setState((state) => {
+            state[book.shelf] = state[book.shelf].filter((data) => {
+              return data !== book
+            })
+            state[shelf].push(theBook)
+          })
+        })
+      })
+    } else {
+      BooksAPI.update(book, shelf).then(() => {
+        BooksAPI.get(book.id).then((theBook) => {
+          this.setState((state) => {
+            state[shelf].push(theBook)
+          })
+        })
       })
     }
   }
 
   render() {
-    console.log(this.state)
     return (
       <div className="app">
         <Route exact path='/' render={() => (
@@ -92,6 +108,10 @@ class BooksApp extends Component {
         )}/>
         <Route path='/search' render={({ history }) => (
           <SearchBook
+            onUpdateShelf={(book, shelf) => {
+                this.updateShelf(book, shelf)
+                // history.push('/')
+              }}
           />
         )}/>
       </div>
