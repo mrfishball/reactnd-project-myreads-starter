@@ -5,6 +5,7 @@ class Book extends Component {
   handleShelfUpdate = (book, shelf) => {
     if (this.props.onUpdateShelf)
       this.props.onUpdateShelf(book, shelf)
+      alert("Success! " + book.title + " has been added to the " + shelf + " shelf.")
   }
 
   render() {
