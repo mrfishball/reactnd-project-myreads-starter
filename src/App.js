@@ -11,26 +11,15 @@ class BooksApp extends Component {
     wantToRead: [],
     read: [],
   }
-  componentDidMount() {
-    this.groupingBooks()
-  }
 
-  groupingBooks = () => {
+  componentDidMount() {
     BooksAPI.getAll().then((books) => {
-      books.forEach((book) => {
-        if (book.shelf === "currentlyReading") {
-          this.setState((state) => ({
-            currentlyReading: state.currentlyReading.concat([ book ])
-          }))
-        } else if (book.shelf === "wantToRead") {
-          this.setState((state) => ({
-            wantToRead: state.wantToRead.concat([ book ])
-          }))
-        } else {
-          this.setState((state) => ({
-            read: state.read.concat([ book ])
-          }))
-        }
+      this.setState((state) => {
+        state = books.reduce((data, book) => {
+          data[book.shelf] = data[book.shelf] || []
+          data[book.shelf].push(book)
+          return data
+        }, state)
       })
     })
   }
@@ -38,18 +27,12 @@ class BooksApp extends Component {
   updateShelf = (book, shelf) => {
     if (book.shelf !== shelf) {
       BooksAPI.update(book, shelf).then(() => {
-        this.setState({
-          currentlyReading: [],
-          wantToRead: [],
-          read: []
-        })
       })
     }
-    this.groupingBooks()
   }
 
-
   render() {
+    console.log(this.state)
     return (
       <div className="app">
         <Route exact path='/' render={() => (
