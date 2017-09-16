@@ -8,6 +8,7 @@ The MyReads application is built using React as well as third-party APIs for it'
 
 * Fixed where previously no spaces are allowed to be entered in the search field.
 * Fixed where search result is blank if one of the book object is missing an imageLinks property. Those books will have a generic book cover image instead.
+* Fixed where previously state is directly set to equal to the new object from the reduce method.
 
 ## TL;DR
 

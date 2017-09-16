@@ -16,7 +16,7 @@ class BooksApp extends Component {
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
       this.setState((state) => {
-        state = books.reduce((data, book) => {
+        books.reduce((data, book) => {
           data[book.shelf] = data[book.shelf] || []
           data[book.shelf].push(book)
           return data
