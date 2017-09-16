@@ -15,22 +15,25 @@ class BooksApp extends Component {
 
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
-      this.setState((state) => {
-        books.reduce((data, book) => {
+      this.setState((state) => ({
+        state: books.reduce((data, book) => {
           data[book.shelf] = data[book.shelf] || []
           data[book.shelf].push(book)
           return data
-        }, state)
-      })
+        }, state),
+        books: books
+      }))
     })
   }
 
   updateShelf = (book, shelf) => {
-    if (book.shelf && book.shelf !== shelf) {
-      BooksAPI.update(book, shelf).then(() => {
-        BooksAPI.get(book.id).then((theBook) => {
+    let targetBook = this.state.books.filter((data) => data.id === book.id)[0]
+    if (targetBook && targetBook.shelf !== shelf) {
+      BooksAPI.update(targetBook, shelf).then(() => {
+        BooksAPI.get(targetBook.id).then((theBook) => {
           this.setState((state) => ({
-            [book.shelf]: state[book.shelf].filter((data) => data !== book),
+            [targetBook.shelf]: state[targetBook.shelf].filter((data) => data.id !== book.id),
+            books: state.books.filter((data) => data.id !== book.id).concat([ theBook ]),
             [shelf]: state[shelf].concat([ theBook ])
           }))
         })
@@ -39,7 +42,8 @@ class BooksApp extends Component {
       BooksAPI.update(book, shelf).then(() => {
         BooksAPI.get(book.id).then((theBook) => {
           this.setState((state) => ({
-            [shelf]: state[shelf].concat([ theBook ])
+            [shelf]: state[shelf].concat([ theBook ]),
+            books: state.books.concat([ theBook ])
           }))
         })
       })
@@ -47,6 +51,8 @@ class BooksApp extends Component {
   }
 
   render() {
+    console.log(this.state.books)
+    console.log(this.state)
     return (
       <div className="app">
         <Route exact path='/' render={() => (
@@ -106,7 +112,7 @@ class BooksApp extends Component {
         )}/>
         <Route path='/search' render={({ history }) => (
           <SearchBook
-            shelves={this.state}
+            allBooks={this.state.books}
             onUpdateShelf={(book, shelf) => {
                 this.updateShelf(book, shelf)
                 // history.push('/')

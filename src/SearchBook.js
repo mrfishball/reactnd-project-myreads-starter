@@ -29,6 +29,17 @@ class SearchBook extends Component {
       this.props.onUpdateShelf(book, shelf)
   }
 
+  getShelf = (id) => {
+    let theBook = this.props.allBooks.filter((book) => book.id === id)[0]
+    let shelf = ""
+    if (theBook)
+      shelf = theBook.shelf
+    else {
+      shelf = "none"
+    }
+    return shelf
+  }
+
   render() {
     return (
       <div className="search-books">
@@ -58,6 +69,9 @@ class SearchBook extends Component {
               onUpdateShelf={(book, shelf) => {
                   this.handleShelfUpdate(book, shelf)
                 }}
+              selectValue={(id) => {
+                return this.getShelf(id)
+              }}
             />
           </ol>
         </div>
