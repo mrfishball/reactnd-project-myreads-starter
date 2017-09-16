@@ -4,12 +4,18 @@ This is the MyReads project for the Udacity React Nanodegree course. This app al
 
 The MyReads application is built using React as well as third-party APIs for it's search capability as well as assigning or adding books to different shelves. This means that all the changes you make are persisted with the backend.
 
+## Bugfix
+
+* Fixed where previously no spaces are allowed to be entered in the search field.
+* Fixed where search result is blank if one of the book object is missing an imageLinks property. Those books will have a generic book cover image instead.
+
 ## TL;DR
 
 * install all project dependencies with `npm install`
 * start the application with `npm start`
 
 ## What You're Getting
+
 ```bash
 ├── CONTRIBUTING.md
 ├── README.md - This file.

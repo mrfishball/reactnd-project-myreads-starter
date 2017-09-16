@@ -8,6 +8,11 @@ class Book extends Component {
       alert("Success! " + book.title + " has been added to the " + shelf + " shelf.")
   }
 
+  getImgURL = (book) => {
+    let imgURL = book.imageLinks ? book.imageLinks.thumbnail : "http://d28hgpri8am2if.cloudfront.net/book_images/no_book_cover_hr.jpg"
+    return { width: 128, height: 193, backgroundImage: `url(${imgURL})`, backgroundSize: "cover"}
+  }
+
   render() {
     return (
       <ol className="books-grid">
@@ -15,7 +20,7 @@ class Book extends Component {
           <li key={book.id}>
             <div className="book">
               <div className="book-top">
-                <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: 'url(' + book.imageLinks.thumbnail + ')'}}></div>
+                <div className="book-cover" style={this.getImgURL(book)}></div>
                 <div className="book-shelf-changer">
                   <select defaultValue={ book.shelf ? book.shelf : "none" } onChange={(event) => this.handleShelfUpdate(book, event.target.value)}>
                     <option value="none" disabled>Move to...</option>
@@ -30,7 +35,7 @@ class Book extends Component {
               <div className="book-authors">{book.authors && book.authors.length > 1 ? book.authors.join(", ") : book.authors}</div>
             </div>
           </li>
-        )) : "Add books to shelves and start reading!"}
+        )): "Add more books and start reading now!"}
       </ol>
     )
   }
