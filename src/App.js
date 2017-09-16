@@ -29,20 +29,18 @@ class BooksApp extends Component {
     if (book.shelf && book.shelf !== shelf) {
       BooksAPI.update(book, shelf).then(() => {
         BooksAPI.get(book.id).then((theBook) => {
-          this.setState((state) => {
-            state[book.shelf] = state[book.shelf].filter((data) => {
-              return data !== book
-            })
-            state[shelf].push(theBook)
-          })
+          this.setState((state) => ({
+            [book.shelf]: state[book.shelf].filter((data) => data !== book),
+            [shelf]: state[shelf].concat([ theBook ])
+          }))
         })
       })
     } else {
       BooksAPI.update(book, shelf).then(() => {
         BooksAPI.get(book.id).then((theBook) => {
-          this.setState((state) => {
-            state[shelf].push(theBook)
-          })
+          this.setState((state) => ({
+            [shelf]: state[shelf].concat([ theBook ])
+          }))
         })
       })
     }
