@@ -29,15 +29,26 @@ class BooksApp extends Component {
   updateShelf = (book, shelf) => {
     let targetBook = this.state.books.filter((data) => data.id === book.id)[0]
     if (targetBook && targetBook.shelf !== shelf) {
-      BooksAPI.update(targetBook, shelf).then(() => {
-        BooksAPI.get(targetBook.id).then((theBook) => {
-          this.setState((state) => ({
-            [targetBook.shelf]: state[targetBook.shelf].filter((data) => data.id !== book.id),
-            books: state.books.filter((data) => data.id !== book.id).concat([ theBook ]),
-            [shelf]: state[shelf].concat([ theBook ])
-          }))
+      if (shelf === "none") {
+        BooksAPI.update(targetBook, shelf).then(() => {
+          BooksAPI.get(targetBook.id).then((theBook) => {
+            this.setState((state) => ({
+              [targetBook.shelf]: state[targetBook.shelf].filter((data) => data.id !== book.id),
+              books: state.books.filter((data) => data.id !== book.id),
+            }))
+          })
         })
-      })
+      } else {
+        BooksAPI.update(targetBook, shelf).then(() => {
+          BooksAPI.get(targetBook.id).then((theBook) => {
+            this.setState((state) => ({
+              [targetBook.shelf]: state[targetBook.shelf].filter((data) => data.id !== book.id),
+              books: state.books.filter((data) => data.id !== book.id).concat([ theBook ]),
+              [shelf]: state[shelf].concat([ theBook ])
+            }))
+          })
+        })
+      }
     } else {
       BooksAPI.update(book, shelf).then(() => {
         BooksAPI.get(book.id).then((theBook) => {

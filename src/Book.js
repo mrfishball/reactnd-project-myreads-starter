@@ -5,8 +5,12 @@ class Book extends Component {
   handleShelfUpdate = (book, shelf) => {
     if (this.props.onUpdateShelf)
       this.props.onUpdateShelf(book, shelf)
-      alert("Success! " + book.title + " has been moved to the " + shelf + " shelf.")
-  }
+      if (shelf === "none") {
+        alert("Success! " + book.title + " has been removed.")
+      } else {
+        alert("Success! " + book.title + " has been moved to the " + shelf + " shelf.")
+      }
+    }
 
   handleGetShelf = (id) => {
     if (this.props.selectValue)
